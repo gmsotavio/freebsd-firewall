@@ -127,6 +127,11 @@ ipfw -q add 00101 check-state
 EOF
 
 ## Clarification about xmit recv via in out semantics
+# https://lists.freebsd.org/pipermail/freebsd-questions/2005-July/094555.html
 # https://lists.freebsd.org/pipermail/freebsd-questions/2005-July/094613.html
 # https://lists.freebsd.org/pipermail/freebsd-ipfw/2018-January/006647.html
-# https://groups.google.com/g/comp.unix.bsd.freebsd.misc/c/AkDSKlUmVok?pli=1 
+# https://groups.google.com/g/comp.unix.bsd.freebsd.misc/c/AkDSKlUmVok?pli=1
+
+## Refereces
+# https://www.asksaro.com/freebsd/setting-up-a-network-gateway-using-ipfw-and-natd/
+# https://blog.socruel.nu/freebsd/how-to-implement-an-internet-facing-freebsd-ipfw-firewall.html
