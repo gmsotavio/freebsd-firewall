@@ -106,7 +106,7 @@ sysctl net.inet.ip.fw.verbose_limit=0
 cat << EOF > /etc/ipfw.rules
 #!/bin/sh
 
-ipfw -f flush
+ipfw -q -f flush
 
 wan_if="vtnet0"
 lan_if="vtnet1"
@@ -115,15 +115,37 @@ lan_if="vtnet1"
 
 # NAT
 ipfw disable one_pass
-ipfw -q nat 1 config if $wan_if same_ports unreg_only reset
+ipfw -q nat 1 config if ${wan_if} same_ports unreg_only reset
 
-ipfw -q add 00005 allow all from any to any via $lan_if
+ipfw -q add 00010 allow all from any to any via lo0
+
+ipfw -q add 00099 reass all from any to any in
 
 # NAT any inbound packets
-ipfw -q add 00100 nat 1 ip from any to any in via $pif
+ipfw -q add 00100 nat 1 ip from any to any in via ${wan_if}
 
 # Allow the packet through if it has an existing entry in the dynamic rules table
 ipfw -q add 00101 check-state
+
+ipfw -q add 00102 deny ip from any to any frag
+ipfw -q add 00103 deny ip from any to any established
+
+## Inbound rules for the WAN interface (01000 - 01499)
+
+ipfw -q add 01301 allow icmp from any to me in recv ${wan_if} keep-state
+ipfw -q add 01499 deny all from any to any in recv ${wan_if}
+
+## Inbound rules for the LAN interface (01500 - 01999)
+
+ipfw -q add 01501 allow tcp from any to me 22 in recv ${lan_if} keep-state
+ipfw -q add 01701 allow icmp from 192.168.1.0/24 to me in recv ${lan_if} keep-state
+ipfw -q add 01899 allow ip from 192.168.1.0/24 to \( not 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 or not me \) in recv ${lan_if} keep-state
+ipfw -q add 01999 deny all from any to any in recv ${lan_if}
+
+## Outbound rules for the WAN interface (02000 - 02499)
+
+## Outbound rules for the LAN interface (02500 - 02999)
+
 EOF
 
 ## Clarification about xmit recv via in out semantics
@@ -131,7 +153,10 @@ EOF
 # https://lists.freebsd.org/pipermail/freebsd-questions/2005-July/094613.html
 # https://lists.freebsd.org/pipermail/freebsd-ipfw/2018-January/006647.html
 # https://groups.google.com/g/comp.unix.bsd.freebsd.misc/c/AkDSKlUmVok?pli=1
+# https://lists.freebsd.org/pipermail/freebsd-ipfw/2005-September/002073.html
 
 ## Refereces
 # https://www.asksaro.com/freebsd/setting-up-a-network-gateway-using-ipfw-and-natd/
 # https://blog.socruel.nu/freebsd/how-to-implement-an-internet-facing-freebsd-ipfw-firewall.html
+# https://www.usenix.org/legacy/publications/library/proceedings/bsdcon02/full_papers/lidl/lidl_html/index.html
+# https://paulgorman.org/technical/freebsd-ipfw.txt.html
