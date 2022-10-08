@@ -137,14 +137,39 @@ ipfw -q add 01499 deny all from any to any in recv ${wan_if}
 
 ## Inbound rules for the LAN interface (01500 - 01999)
 
-ipfw -q add 01501 allow tcp from any to me 22 in recv ${lan_if} keep-state
+ipfw -q add 01501 allow tcp from any to me dst-port 22 in recv ${lan_if} keep-state
 ipfw -q add 01701 allow icmp from 192.168.1.0/24 to me in recv ${lan_if} keep-state
 ipfw -q add 01899 allow ip from 192.168.1.0/24 to \( not 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 or not me \) in recv ${lan_if} keep-state
 ipfw -q add 01999 deny all from any to any in recv ${lan_if}
 
 ## Outbound rules for the WAN interface (02000 - 02499)
 
+# Outbound rules for traffic coming from the firewall itself
+ipfw -q add 2001 allow tcp from me to any dst-port 53 out xmit ${wan_if} setup keep-state
+ipfw -q add 2002 allow udp from me to any dst-port 53 out xmit ${wan_if} keep-state
+ipfw -q add 2011 allow udp from me to any dst-port 123 out xmit ${wan_if} keep-state
+ipfw -q add 2021 allow udp from me to any dst-port http, https out xmit ${wan_if} setup keep-state
+ipfw -q add 2031 allow icmp from me to any out xmit ${wan_if} keep-state
+
+# Outbound rules for traffic coming from internal network
+ipfw -q add 02111 skipto 09999 udp from 192.168.1.0/24 to any dst-port 123 out xmit ${wan_if} keep-state
+
+ipfw -q add 02211 skipto 09999 tcp from 192.168.1.0/24 to any dst-port domain, ssh, http, https out xmit ${wan_if} setup keep-state
+ipfw -q add 02212 skipto 09999 udp from 192.168.1.0/24 to any dst-port domain, http, https, out xmit ${wan_if} keep-state
+ipfw -q add 02301 skipto 09999 icmp from 192.168.1.0/24 to any out xmit ${wan_if} keep-state
+
+ipfw -q add 02499 deny log all from any to any out via ${wan_if}
+
 ## Outbound rules for the LAN interface (02500 - 02999)
+
+ipfw -q add 02999 deny log all from any to any out via ${lan_if}
+
+ipfw -q add 04999 deny log all from any to any
+
+## Outbound IPv4 NAT
+ipfw -q add nat 1 ip4 from any to any out xmit ${wan_if}
+
+ipfw -q add 100001 allow ip4 from any to any
 
 EOF
 
@@ -154,6 +179,9 @@ EOF
 # https://lists.freebsd.org/pipermail/freebsd-ipfw/2018-January/006647.html
 # https://groups.google.com/g/comp.unix.bsd.freebsd.misc/c/AkDSKlUmVok?pli=1
 # https://lists.freebsd.org/pipermail/freebsd-ipfw/2005-September/002073.html
+
+## Wireguard
+# https://sirtoffski.github.io/docs/freebsd-ipfw/
 
 ## Refereces
 # https://www.asksaro.com/freebsd/setting-up-a-network-gateway-using-ipfw-and-natd/
