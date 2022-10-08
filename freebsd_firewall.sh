@@ -103,7 +103,7 @@ service ipfw start
 # Unlimited logging.
 sysctl net.inet.ip.fw.verbose_limit=0
 
-cat << EOF > /etc/ipfw.rules
+cat <<- EOF > /etc/ipfw.rules
 #!/bin/sh
 
 ipfw -q -f flush
