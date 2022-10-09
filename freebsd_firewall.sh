@@ -20,7 +20,7 @@ cat << EOF > /usr/local/etc/dhcpd.conf
 # Configuration file for ISC dhcpd for FreeBSD.
 # 
 
-option domain-name "example.org";
+option domain-name "mydomain";
 option domain-name-servers 8.8.8.8, 8.8.4.4;
 option subnet-mask 255.255.255.0;
 
