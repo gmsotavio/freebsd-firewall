@@ -2,8 +2,8 @@
 
 ## Configuring the network interfaces
 # https://docs.freebsd.org/en/books/handbook/config/#_configuring_the_network_card
-sysrc ifconfig_vtnet0="DHCP"
-sysrc ifconfig_vtnet1="inet 192.168.1.1 netmask 255.255.255.0"
+sysrc ifconfig_igc0="DHCP"
+sysrc ifconfig_igc1="inet 192.168.1.1 netmask 255.255.255.0"
 
 ## Setup DHCP server
 # https://docs.freebsd.org/en/books/handbook/network-servers/#network-dhcp
@@ -42,7 +42,7 @@ EOF
 sysrc dhcpd_enable="YES"
 
 # Select the listening interface
-sysrc dhcpd_ifaces="vtnet1"
+sysrc dhcpd_ifaces="igc1"
 	
 # Start the DHCP service
 service isc-dhcpd start
@@ -63,7 +63,7 @@ service isc-dhcpd start
 # netstat -4 -n -r
 
 # Default route
-sysrc defaultrouter="192.168.122.1"
+sysrc defaultrouter="192.168.31.1"
 
 # Static routes for internal network
 #static_routes="net1 net2"
@@ -108,8 +108,8 @@ cat << "EOF" > /etc/ipfw.rules
 
 ipfw -q -f flush
 
-wan_if="vtnet0"
-lan_if="vtnet1"
+wan_if="igc0"
+lan_if="igc1"
 
 # CMD RULE_NUMBER set SET_NUMBER ACTION log LOG_AMOUNT PROTO from SRC SRC_PORT to DST DST_PORT OPTIONS
 
