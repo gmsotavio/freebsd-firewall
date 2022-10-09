@@ -155,7 +155,7 @@ ipfw -q add 2031 allow icmp from me to any out xmit ${wan_if} keep-state
 ipfw -q add 02111 skipto 09999 udp from 192.168.1.0/24 to any dst-port 123 out xmit ${wan_if} keep-state
 
 ipfw -q add 02211 skipto 09999 tcp from 192.168.1.0/24 to any dst-port domain, ssh, http, https out xmit ${wan_if} setup keep-state
-ipfw -q add 02212 skipto 09999 udp from 192.168.1.0/24 to any dst-port domain, http, https, out xmit ${wan_if} keep-state
+ipfw -q add 02212 skipto 09999 udp from 192.168.1.0/24 to any dst-port domain, http, https out xmit ${wan_if} keep-state
 ipfw -q add 02301 skipto 09999 icmp from 192.168.1.0/24 to any out xmit ${wan_if} keep-state
 
 ipfw -q add 02499 deny log all from any to any out via ${wan_if}
