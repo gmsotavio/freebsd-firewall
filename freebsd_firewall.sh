@@ -42,7 +42,7 @@ EOF
 sysrc dhcpd_enable="YES"
 
 # Select the listening interface
-sysrc dhcpd_ifaces="vtnet1"
+sysrc dhcpd_ifaces="igc1"
 	
 # Start the DHCP service
 service isc-dhcpd start
