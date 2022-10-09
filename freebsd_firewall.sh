@@ -9,7 +9,7 @@ sysrc ifconfig_vtnet1="inet 192.168.1.1 netmask 255.255.255.0"
 # https://docs.freebsd.org/en/books/handbook/network-servers/#network-dhcp
 
 # Install DHCP server
-pgk install -y isc-dhcp44-server/pkg-descr
+pgk install -y isc-dhcp44-server
 
 # Create a configuration file based on the example
 cp /usr/local/etc/dhcpd.conf.sample /usr/local/etc/dhcpd.conf 
