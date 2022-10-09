@@ -167,7 +167,7 @@ ipfw -q add 02999 deny log all from any to any out via ${lan_if}
 ipfw -q add 04999 deny log all from any to any
 
 ## Outbound IPv4 NAT
-ipfw -q add nat 1 ip4 from any to any out xmit ${wan_if}
+ipfw -q 9999 add nat 1 ip4 from any to any out xmit ${wan_if}
 
 ipfw -q add 100001 allow ip4 from any to any
 
