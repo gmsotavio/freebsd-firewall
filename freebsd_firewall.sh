@@ -194,3 +194,5 @@ EOF
 
 # https://unix.stackexchange.com/questions/92175/freebsd-ipfw-keepstate-vs-setup-keep-state
 # https://forums.freebsd.org/threads/ipfw-nat-rule-being-skipped.56323/
+# https://www.mail-archive.com/freebsd-security@freebsd.org/msg01794.html
+# https://forums.freebsd.org/threads/ipfw-nat-mystery.71351/
