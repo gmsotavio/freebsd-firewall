@@ -188,5 +188,6 @@ EOF
 # https://blog.socruel.nu/freebsd/how-to-implement-an-internet-facing-freebsd-ipfw-firewall.html
 # https://www.usenix.org/legacy/publications/library/proceedings/bsdcon02/full_papers/lidl/lidl_html/index.html
 # https://paulgorman.org/technical/freebsd-ipfw.txt.html
+# https://www.neelc.org/posts/freebsd-ipfw-nat/
 
 # https://unix.stackexchange.com/questions/92175/freebsd-ipfw-keepstate-vs-setup-keep-state
