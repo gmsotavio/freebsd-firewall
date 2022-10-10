@@ -82,6 +82,8 @@ service netif restart
 # /etc/rc.d/routing restart
 service routing restart
 
+# Make to be able to reload (or restart) IPFW rules while we have a SSH session with the firewall
+sysctl net.inet.ip.fw.dyn_keep_states=1
 
 ## Firewall configuration
 # https://docs.freebsd.org/pt-br/books/handbook/firewalls/#firewalls-ipfw
@@ -133,13 +135,13 @@ ipfw -q add 00103 deny ip from any to any established
 ## Inbound rules for the WAN interface (01000 - 01499)
 
 ipfw -q add 01301 allow icmp from any to me in recv ${wan_if} keep-state
-ipfw -q add 01499 deny all from any to any in recv ${wan_if}
+ipfw -q add 01499 deny log all from any to any in via ${wan_if}
 
 ## Inbound rules for the LAN interface (01500 - 01999)
 
 ipfw -q add 01501 allow tcp from any to me dst-port 22 in recv ${lan_if} keep-state
 ipfw -q add 01701 allow icmp from 192.168.1.0/24 to me in recv ${lan_if} keep-state
-ipfw -q add 01899 allow ip from 192.168.1.0/24 to \( not 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 or not me \) in recv ${lan_if} keep-state
+ipfw -q add 01899 allow ip from 192.168.1.0/24 to \( not 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 or not me \) in recv ${lan_if} 
 ipfw -q add 01999 deny all from any to any in recv ${lan_if}
 
 ## Outbound rules for the WAN interface (02000 - 02499)
